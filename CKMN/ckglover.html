@@ -1,0 +1,940 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title></title>
+</head>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.js"></script>
+<style>
+    input {
+        width: 35px;
+        border: none;
+        outline: none;
+        text-align: right;
+    }
+    /* 在Chrome浏览器下 */
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+    }
+    /* 在Firefox浏览器下 */
+    input[type="number"]{
+        -moz-appearance: textfield;
+    }
+
+    /* 出货表格 */
+    #table_{
+        top: 7%;
+        left: 3.3%;
+        width: 480px;
+        position:relative;
+    }
+
+    .table {
+        text-align: center;
+        margin: auto;
+        font-size: 6px;
+    }
+    td{
+        width: 96px;
+        height: 116px;
+    }
+
+    /* 整体样式 */
+    #ckgl{
+        margin: auto;
+        text-align: center;
+        width: 800px;
+        height: 1100px;
+        background-image: url("1x/卡池_画板.jpg");
+        color: #ffffff;
+        /*background-size: cover;*/
+        position:relative;
+
+        background-repeat: no-repeat;   /*不重复*/
+        background-size: 100% 100%;     /* 满屏*/
+
+        -webkit-user-select:none;
+        -moz-user-select:none;
+        -ms-user-select:none;
+        user-select:none;
+    }
+    /* 卡池 */
+    .panel {
+        /*width: 1110px;*/
+        width: 65%;
+        height: 550px;
+        top: 7.40%;
+        left: 1%;
+        margin: 0 auto;
+        background: none;
+        border: none;
+        position:relative;
+    }
+
+    /* 出货数据记录样式 */
+    .panel-body{
+        width: 82%;
+        height: 380px;
+        margin: auto;
+        top: 9%;
+        /*left: 4.4%;*/
+
+        position:relative;
+    }
+    #panel-body-left{
+        width: 12%;
+        height: 24px;
+        top: 23%;
+        left: 20%;
+
+        position:relative;
+
+        font-size: 17px;
+        text-align: center;
+    }
+    #panel-body-center{
+        width: 12%;
+        height: 45px;
+        top: 29%;
+        left: 20%;
+        position:relative;
+
+        font-size: 35px;
+        text-align: center;
+    }
+    #panel-body-right{
+        float: right;
+        width: 24%;
+        height: 260px;
+        top: 1%;
+        /*bottom: 2%;*/
+        right: 6.5%;
+        position:relative;
+
+        font-size: 14px;
+        text-align: left;
+        overflow: scroll;
+        flex-direction: column-reverse;
+    }
+    #ogm{
+        width: 26%;
+        height: 34px;
+        bottom: 8%;
+        left: 68.5%;
+        background-image: url("1x/mmexport1614231547534.png");
+        background-color: #FFFFFF;
+        opacity: 0;
+        color: #ffffff;
+        /*background-size: cover;*/
+
+        position:relative;
+        background-repeat: no-repeat;
+        background-size: 100% 100%;
+        -moz-background-size: 100% 100%;
+    }
+
+    #panel-body-right::-webkit-scrollbar {
+        display:none;
+    }
+
+    /* 顶部卡池图标切换样式 */
+    .top{
+        left: 4%;
+
+        width: 471px; /* 11.9625 98.6 */
+        height: 50px;
+        background-image: url("1x/基准.png");
+        color: #ffffff;
+        background-size: cover;
+        position:relative;
+    }
+
+    /* 按钮透明样式 */
+    button{
+        outline:0;
+        background-color:transparent;
+        border-style:none;
+    }
+
+    /* 选择up的下拉框样式 */
+    .select_xz{
+        top: 2.7%;
+        left: 0.5%;
+        height: 90px;
+        position:relative;
+    }
+
+    /* 切换卡池按钮样式 */
+    #left, #right{
+        top: 2%;
+        height: 50px;
+        width: 100px;
+    }
+    #left{
+        left: 1%;
+        float: left;
+    }
+    #right{
+        right: 1%;
+        float: right;
+    }
+
+    /* 抽卡按钮样式 */
+    #chouka{
+        top: 20%;
+        left: 5.5%;
+        width: 417px;
+        height: 38px;
+        position:relative;
+    }
+    .btn_jsd, .btn_wqd, .btn_jss, .btn_wqs{
+        width: 130px;
+        height: 38px;
+    }
+    .btn_jsd, .btn_wqd{
+        float: left;
+    }
+    .btn_jss, .btn_wqs{
+        float: right;
+    }
+
+    /* 抽卡出货物品图片 */
+    #img1, #img2, #img3, #img4, #img5, #img6, #img7, #img8, #img9, #img10{
+        width: 64px;
+        height: 65px;
+        color: #ffffff;
+        background-size: cover;
+        margin: auto;
+        /*background-blend-mode: lighten;*/
+    }
+
+    #qhup{
+        width: 90px;
+        height: 70px;
+        top: 12%;
+        left: 6%;
+        float: left;
+        position:relative;
+    }
+</style>
+<body>
+<div id="ckgl">
+    <button id="qhup" class="btn btn-danger" style="display: none;" value="1" onclick="qh()">
+        点击切换为<br><span id="tt">命运UP池</span>
+    </button>
+    <div class="panel">
+        <div class="header_bt clickable">
+            <div class="top">
+                <button id="left" onclick="switch_s('l')" value="3"></button>
+                <button id="right" onclick="switch_s('r')" value="2"></button>
+            </div>
+        </div>
+        <div class="select_xz clickable" style="height: 75px">
+            <div id="juese" style="margin: auto; width: 260px;display: none">
+                <select id="Sjs" class="form-control"></select>
+            </div>
+            <div id="Ajuese" style="margin: auto; width: 260px;display: block">
+                <select id="Ajs" class="form-control"></select>
+            </div>
+            <div id="wuqi" style="margin: auto; width: 260px;display: none">
+                <select id="lwq" class="form-control"></select>
+            </div>
+        </div>
+        <div id="table_">
+            <table class="table">
+                <tr>
+                    <td>
+                        <div id="img1"></div><span id="a1"></span>
+                    </td>
+                    <td>
+                        <div id="img2"></div><span id="a2"></span>
+                    </td>
+                    <td>
+                        <div id="img3"></div><span id="a3"></span>
+                    </td>
+                    <td>
+                        <div id="img4"></div><span id="a4"></span>
+                    </td>
+                    <td>
+                        <div id="img5"></div><span id="a5"></span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div id="img6"></div><span id="a6"></span>
+                    </td>
+                    <td>
+                        <div id="img7"></div><span id="a7"></span>
+                    </td>
+                    <td>
+                        <div id="img8"></div><span id="a8"></span>
+                    </td>
+                    <td>
+                        <div id="img9"></div><span id="a9"></span>
+                    </td>
+                    <td>
+                        <div id="img10"></div><span id="a10"></span>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div id="chouka">
+            <div id="div_js" style="margin: auto">
+               <button class="btn_jsd" onclick="btn_js(1)"></button>
+               <button class="btn_jss" onclick="btn_js(10)"></button>
+            </div>
+            <div id="div_wq" style="margin: auto;display: none">
+                <button class="btn_wqd" onclick="btn_wq(1)"></button>
+                <button class="btn_wqs" onclick="btn_wq(10)"></button>
+            </div>
+        </div>
+    </div>
+    <div class="panel-body">
+        <div id="panel-body-left"></div>
+        <div id="panel-body-center"></div>
+        <div id="panel-body-right"></div>
+        <div id="ogm"></div>
+    </div>
+    <div class="panel-bottom">
+
+    </div>
+</div>
+</body>
+<script type="text/javascript">
+    {
+        var Sgzt = ["神威·暗能", "丽芙·仰光", "里·乱数",
+            "卡列尼娜·烬燃", "七实·脉冲", "露西亚·深红之渊",
+            "比安卡·真理", "露西亚·鸦羽", "罗塞塔·凛冽",
+            "露娜·银冕", "库洛姆·荣光", "薇拉·绯耀"];
+        var Agzt = [
+            "里·异火", "比安卡·零度", "卡列尼娜·爆裂",
+            "渡边·夜刃", "露西亚·黎明", "丽芙·流光",
+            "神威·重能", "渡边·夙星", "艾拉·溢彩",
+            "苏菲亚·银牙", "库洛姆·弧光", "薇拉·瑰丽",
+            "常羽·游麟", "万事·明觉", "21号·XXI"];
+        var Bgzt = [
+            "露西亚·红莲", "丽芙·蚀暗", "七实·风暴"
+        ];
+        var jssp = Sgzt.concat(Agzt.concat(Bgzt));
+
+        var lxwq = ["噬狼枪", "零度定标", "红莲狂士", "影打·逆断",
+            "天狼星", "零式", "神赐者", "天龙之风",
+            "雷米尔", "奇美拉·逆断", "机韵", "大神威",
+            "漆黑", "狂乱融合炮", "核基红龙", "斩魂者",
+            "红樱", "镇命者", "魏紫", "莱特宁",
+            "赛因", "圣艾尔摩", "朱桦", "塔纳托斯",
+            "沙利叶", "冈格尼尔", "青赫", "八极",
+            "奥兹玛", "阿波罗", "天平", "林中主人",
+            "呼噜", "不死鸟"];
+        var wxwq = ["暗影紫光", "九字之定", "卫士挂载", "猎隼E·3320",
+            "电光石火", "动轮大剑", "熔岩之柱", "石之心",
+            "褪色", "RL·03C黑刺", "白鳞出涧", "冕饵",
+            "掠影", "归云", "卡拉一型铳刃", "FA2D-AP",
+            "奥黛特","阿尼姆斯","绯煌骑士"];
+        var zswq = ["黑星", "无铭", "型鱼挂载", "滑轮复合弓",
+            "噪音", "压乱者", "螺旋炮", "切割猎手",
+            "黯淡", "异端开拓者", "崩甲玖式", "始",
+            "噬光", "黑铁寒星陆式", "制式铳刃", "子弹蚁",
+            "序曲","协作者","长旒旗枪"];
+        var lswq = ["制式枪", "护身刀", "半自律攻击炮", "练习用复合弓",
+            "作业用链锯", "大剑", "火箭筒", "双手刀", "制式镰刀"];
+
+        var zszb = ["阿基米德", "爱迪生", "爱丽丝", "坎宁安",];
+        var tpcl = ["武器突破核心·高", "意识突破回路·高", "突破合金·高"];
+        var jycl = ["经验仓·大", "经验仓·超大"];
+        var lmx = ["螺母箱·大", "螺母箱·超大"];
+
+        var _Sgzt = ["1x/卡池icon/神威·暗能.png",
+            "1x/卡池icon/丽芙·仰光.png",
+            "1x/卡池icon/里·乱数.png",
+            "1x/卡池icon/卡列尼娜·烬燃.png",
+            "1x/卡池icon/七实·脉冲.png",
+            "1x/卡池icon/露西亚·深红之渊.png",
+            "1x/卡池icon/比安卡·真理.png",
+            "1x/卡池icon/露西亚·鸦羽.png",
+            "1x/卡池icon/罗塞塔·凛冽.png",
+            "1x/卡池icon/露娜·银冕.png",
+            "1x/卡池icon/库洛姆·荣光.png",
+            "1x/卡池icon/薇拉·绯耀.png"
+        ];
+
+
+        var _Agzt = [
+            "1x/卡池icon/里·异火.png",
+            "1x/卡池icon/比安卡·零度.png",
+            "1x/卡池icon/卡列尼娜·爆裂.png",
+            "1x/卡池icon/渡边·夜刃.png",
+            "1x/卡池icon/露西亚·黎明.png",
+            "1x/卡池icon/丽芙·流光.png",
+            "1x/卡池icon/神威·重能.png",
+            "1x/卡池icon/渡边·夙星.png",
+            "1x/卡池icon/艾拉·溢彩.png",
+            "1x/卡池icon/苏菲亚·银牙.png",
+            "1x/卡池icon/库洛姆·弧光.png",
+            "1x/卡池icon/薇拉·瑰丽.png",
+            "1x/卡池icon/常羽·游麟.png",
+            "1x/卡池icon/万事·明觉.png",
+            "1x/卡池icon/21号·XXI.png"
+        ];
+        var _Bgzt = [
+            "1x/卡池icon/露西亚·红莲.png",
+            "1x/卡池icon/丽芙·蚀暗.png",
+            "1x/卡池icon/七实·风暴.png"
+        ];
+        var _jssp = _Sgzt.concat(_Agzt.concat(_Bgzt));
+
+        var _lxwq = ["1x/武器-ICON/噬狼枪.png",
+            "1x/武器-ICON/零度定标.png",
+            "1x/武器-ICON/红莲狂士.png",
+            "1x/武器-ICON/影打·逆断.png",
+            "1x/武器-ICON/天狼星.png",
+            "1x/武器-ICON/零式.png",
+            "1x/武器-ICON/神赐者.png",
+            "1x/武器-ICON/天龙之风.png",
+            "1x/武器-ICON/雷米尔.png",
+            "1x/武器-ICON/奇美拉·逆断.png",
+            "1x/武器-ICON/机韵.png",
+            "1x/武器-ICON/大神威.png",
+            "1x/武器-ICON/漆黑.png",
+            "1x/武器-ICON/狂乱融合炮.png",
+            "1x/武器-ICON/核基红龙.png",
+            "1x/武器-ICON/斩魂者.png",
+            "1x/武器-ICON/红樱.png",
+            "1x/武器-ICON/镇命者.png",
+            "1x/武器-ICON/魏紫.png",
+            "1x/武器-ICON/莱特宁.png",
+            "1x/武器-ICON/赛因.png",
+            "1x/武器-ICON/圣艾尔摩.png",
+            "1x/武器-ICON/朱桦.png",
+            "1x/武器-ICON/塔纳托斯.png",
+            "1x/武器-ICON/沙利叶.png",
+            "1x/武器-ICON/冈格尼尔.png",
+            "1x/武器-ICON/青赫.png",
+            "1x/武器-ICON/八极.png",
+            "1x/武器-ICON/奥兹玛.png",
+            "1x/武器-ICON/阿波罗.png",
+            "1x/武器-ICON/天平.png",
+            "1x/武器-ICON/林中主人.png",
+            "1x/武器-ICON/呼噜.png",
+            "1x/武器-ICON/不死鸟.png"
+        ];
+        var _wxwq = ["1x/武器-ICON/暗影紫光.png",
+            "1x/武器-ICON/九字之定.png",
+            "1x/武器-ICON/卫士挂载.png",
+            "1x/武器-ICON/猎隼E·3320.png",
+            "1x/武器-ICON/电光石火.png",
+            "1x/武器-ICON/动轮大剑.png",
+            "1x/武器-ICON/熔岩之柱.png",
+            "1x/武器-ICON/石之心.png",
+            "1x/武器-ICON/褪色.png",
+            "1x/武器-ICON/RL·03C黑刺.png",
+            "1x/武器-ICON/白鳞出涧.png",
+            "1x/武器-ICON/冕饵.png",
+            "1x/武器-ICON/掠影.png",
+            "1x/武器-ICON/归云.png",
+            "1x/武器-ICON/卡拉一型铳刃.png",
+            "1x/武器-ICON/FA2D-AP.png",
+            "1x/武器-ICON/奥黛特.png",
+            "1x/武器-ICON/阿尼姆斯.png",
+            "1x/武器-ICON/绯煌骑士.png"
+        ];
+        var _zswq = ["1x/武器-ICON/黑星.png",
+            "1x/武器-ICON/无铭.png",
+            "1x/武器-ICON/型鱼挂载.png",
+            "1x/武器-ICON/滑轮复合弓.png",
+            "1x/武器-ICON/噪音.png",
+            "1x/武器-ICON/压乱者.png",
+            "1x/武器-ICON/螺旋炮.png",
+            "1x/武器-ICON/切割猎手.png",
+            "1x/武器-ICON/黯淡.png",
+            "1x/武器-ICON/异端开拓者.png",
+            "1x/武器-ICON/崩甲玖式.png",
+            "1x/武器-ICON/始.png",
+            "1x/武器-ICON/噬光.png",
+            "1x/武器-ICON/黑铁寒星陆式.png",
+            "1x/武器-ICON/制式铳刃.png",
+            "1x/武器-ICON/子弹蚁.png",
+            "1x/武器-ICON/序曲.png",
+            "1x/武器-ICON/协作者.png",
+            "1x/武器-ICON/长旒旗枪.png"
+        ];
+        var _lswq = ["1x/武器-ICON/制式枪.png",
+            "1x/武器-ICON/护身刀.png",
+            "1x/武器-ICON/半自律攻击炮.png",
+            "1x/武器-ICON/练习用复合弓.png",
+            "1x/武器-ICON/作业用链锯.png",
+            "1x/武器-ICON/大剑.png",
+            "1x/武器-ICON/火箭筒.png",
+            "1x/武器-ICON/双手刀.png",
+            "1x/武器-ICON/制式镰刀.png"];
+
+        var _zszb = ["1x/卡池icon/阿基米德.png",
+            "1x/卡池icon/爱迪生.png",
+            "1x/卡池icon/爱丽丝.png",
+            "1x/卡池icon/坎宁安.png",];
+        var _jycl = ["1x/卡池icon/经验仓·大.png",
+            "1x/卡池icon/经验仓·超大.png",];
+        var _tpcl = ["1x/卡池icon/武器突破核心·高.png",
+            "1x/卡池icon/意识突破回路·高.png",
+            "1x/卡池icon/突破合金·高.png"];
+        var _lmx = ["1x/卡池icon/螺母箱·大.png",
+            "1x/卡池icon/螺母箱·超大.png"];
+    }
+    {
+        var a1 = document.getElementById('a1');
+        var a2 = document.getElementById('a2');
+        var a3 = document.getElementById('a3');
+        var a4 = document.getElementById('a4');
+        var a5 = document.getElementById('a5');
+        var a6 = document.getElementById('a6');
+        var a7 = document.getElementById('a7');
+        var a8 = document.getElementById('a8');
+        var a9 = document.getElementById('a9');
+        var a10 = document.getElementById('a10');
+        var img1 = document.getElementById('img1');
+        var img2 = document.getElementById('img2');
+        var img3 = document.getElementById('img3');
+        var img4 = document.getElementById('img4');
+        var img5 = document.getElementById('img5');
+        var img6 = document.getElementById('img6');
+        var img7 = document.getElementById('img7');
+        var img8 = document.getElementById('img8');
+        var img9 = document.getElementById('img9');
+        var img10 = document.getElementById('img10');
+
+        var SL = [];        //出货列表
+        var SLIMG = [];     //出货物品icon
+        var prizes = [];    //要抽的池子
+        var prizeWeight = [];//池子中物品概率
+
+        var allSum = 0;     //抽卡总次数
+        var chl = [];       //历史出货列表
+        var sumjs = 0;      //s级保底次数
+        var Asumjs = 0;     //a级保底次数
+        var sumwq = 0;      //六星保底次数
+        var Wsumwq = 0;     //五星保底次数
+        var LXWQ = 0;       //六星武器总数据
+        var SGZT = 0;       //S角色总数据
+        var bd = 60;        //UP保底次数
+    }
+
+    let qhup = document.getElementById("qhup");
+
+    var Sjs = document.getElementById('Sjs');
+    var lwq = document.getElementById('lwq');
+    var Ajs = document.getElementById('Ajs');
+
+    //加载多选列表
+    window.onload = function () {
+        //循环添加多个值
+        Sjs.options.add(new Option("up角色选择(可不选)","0",true));
+        for(let s = 0; s<Sgzt.length;s++){Sjs.options.add(new Option(Sgzt[s],s + 1));}
+
+        Ajs.options.add(new Option("A级up角色选择(可不选)","0",true));
+        for(let s = 0; s<Agzt.length;s++){Ajs.options.add(new Option(Agzt[s],s + 1));}
+
+        lwq.options.add(new Option("up武器选择(可不选)","0",true));
+        for(let s = 0; s<lxwq.length;s++){lwq.options.add(new Option(lxwq[s],s + 1));}
+
+        panel_body_right.scrollTop = panel_body_right.scrollHeight;
+    };
+
+    ///角色抽卡
+    function btn_js(num) {
+        clear_G();
+        allSum += num;
+
+        prizes = ["S构造体", "A构造体", "B构造体", "角色碎片", "紫色装备", "突破材料", "经验材料", "螺母箱"];
+        if (bd === 60){
+            prizeWeight = [0.50,
+                13.95 * Agzt.length / (Agzt.length + Bgzt.length),
+                13.95 * Bgzt.length / (Agzt.length + Bgzt.length),
+                22.11, 28.39, 14.42, 4.81, 14.42]; //概率，单位：百分比
+        }else {
+            prizeWeight = [1.50,
+                13.95 * Agzt.length / (Agzt.length + Bgzt.length),
+                13.95 * Bgzt.length / (Agzt.length + Bgzt.length),
+                22.11, 28.39, 14.42, 4.81, 14.42]; //概率，单位：百分比
+        }
+
+
+        for (let i = 0; i < num; i++) {
+
+            let js_1 = gl(prizes,prizeWeight);
+            let gl2 = gl_2(js_1) - 1;
+
+            sumjs += 1;
+            Asumjs += 1;
+            if (sumjs === bd) {
+                let number = gl_2("S构造体") - 1;
+                console.log("角色保底 " + sumjs);
+                Schuhuo(number);
+                continue;
+            }
+            if (Asumjs >= 10) {
+                let number = gl_2("A构造体") - 1;
+                Achuhuo(number);
+                continue;
+            }
+
+            function Schuhuo(Sc) {
+                SL.push("<span style='color: #ff8203;'>" + Sgzt[Sc] + "</span>");
+                SLIMG.push(_Sgzt[Sc]);
+                SGZT += sumjs;
+                onGetMessage(SGZT, Sgzt[Sc]);
+                if(qhup.value === "2"){
+                    bd = selectFrom(80, 100);
+                }
+                sumjs = 0;
+            }
+            function Achuhuo(Ac) {
+                SL.push("<span style='color: #fff41f;'>" + Agzt[Ac] + "</span>");
+                SLIMG.push(_Agzt[Ac]);
+                Asumjs = 0;
+            }
+
+            if (prizes[0] === js_1) {console.log("角色欧皇 " + sumjs);Schuhuo(gl2);}
+            if (prizes[1] === js_1) {Achuhuo(gl2);}
+            if (prizes[2] === js_1) {SL.push("<span style='color: #fff41f;'>" + Bgzt[gl2] + "</span>");SLIMG.push(_Bgzt[gl2])}
+            if (prizes[3] === js_1) {SL.push("<span style='color: #fff41f;'>" + jssp[gl2] + " 碎片x2</span>");SLIMG.push(_jssp[gl2])}
+            if (prizes[4] === js_1) {SL.push("<span style='color: #cc0eff;'>" + zszb[gl2] + "</span>");SLIMG.push(_zszb[gl2])}
+            if (prizes[5] === js_1) {SL.push("<span style='color: #cc0eff;'>" + tpcl[gl2] + "</span>");SLIMG.push(_tpcl[gl2])}
+            if (prizes[6] === js_1) {SL.push("<span style='color: #cc0eff;'>" + jycl[gl2] + "</span>");SLIMG.push(_jycl[gl2])}
+            if (prizes[7] === js_1) {SL.push("<span style='color: #cc0eff;'>" + lmx[gl2] + "</span>");SLIMG.push(_lmx[gl2] )}
+
+        }
+        // console.log("S角色" + sumjs);
+        add_G();
+        add_sj(1, bd);
+    }
+
+    //武器抽卡
+    function btn_wq(num) {
+
+        clear_G();
+        allSum += num;
+
+        prizes = ["六星武器", "五星武器", "紫色武器", "蓝色武器", "突破材料", "螺母箱"];
+        prizeWeight = [5.00, 15.00, 33.40, 27.90, 9.35, 9.35]; //概率，单位：百分比
+
+        for (let i = 0; i < num; i++) {
+            let js_1 = gl(prizes,prizeWeight);
+            let gl2 = gl_2(js_1) - 1;
+
+            sumwq += 1;
+            Wsumwq += 1;
+            if (sumwq === 30) {
+                let number = gl_2("六星武器") - 1;
+                console.log("武器保底 " + sumwq);
+                Lchuhuo(number);
+                continue;
+            }
+            if(Wsumwq >= 10){
+                let number = gl_2("五星武器") - 1;
+                Wchuhuo(number);
+                continue;
+            }
+
+            function Lchuhuo(Lc) {
+                SL.push("<span style='color: #ff8203;'>" + lxwq[Lc] + "</span>");
+                SLIMG.push(_lxwq[Lc]);
+                LXWQ += sumwq;
+                onGetMessage(LXWQ, lxwq[Lc]);
+                sumwq = 0;
+            }
+            function Wchuhuo(Wc) {
+                SL.push("<span style='color: #fff41f;'>" + wxwq[Wc] + "</span>");
+                SLIMG.push(_wxwq[Wc]);
+                Wsumwq = 0;
+            }
+
+            if (prizes[0] === js_1) {console.log("武器欧皇 " + sumwq);Lchuhuo(gl2);}
+            if (prizes[1] === js_1) {Wchuhuo(gl2);}
+            if (prizes[2] === js_1) {SL.push("<span style='color: #cc0eff;'>" + zswq[gl2] + "</span>");SLIMG.push(_zswq[gl2]);}
+            if (prizes[3] === js_1) {SL.push("<span style='color: #287eff;'>" + lswq[gl2] + "</span>");SLIMG.push(_lswq[gl2]);}
+            if (prizes[4] === js_1) {SL.push("<span style='color: #cc0eff;'>" + tpcl[gl2] + "</span>");SLIMG.push(_tpcl[gl2]);}
+            if (prizes[5] === js_1) {SL.push("<span style='color: #cc0eff;'>" + lmx[gl2] + "</span>");SLIMG.push(_lmx[gl2]);}
+
+        }
+        add_G();
+        add_sj(2);
+    }
+
+    //清除上一次写入的数据
+    function clear_G() {
+        a1.innerHTML = "";
+        a2.innerHTML = "";
+        a3.innerHTML = "";
+        a4.innerHTML = "";
+        a5.innerHTML = "";
+        a6.innerHTML = "";
+        a7.innerHTML = "";
+        a8.innerHTML = "";
+        a9.innerHTML = "";
+        a10.innerHTML ="";
+        img1.style.backgroundImage = 'url()';
+        img2.style.backgroundImage = 'url()';
+        img3.style.backgroundImage = 'url()';
+        img4.style.backgroundImage = 'url()';
+        img5.style.backgroundImage = 'url()';
+        img6.style.backgroundImage = 'url()';
+        img7.style.backgroundImage = 'url()';
+        img8.style.backgroundImage = 'url()';
+        img9.style.backgroundImage = 'url()';
+        img10.style.backgroundImage = 'url()';
+        SL = [];
+        SLIMG = [];
+    }
+
+    //将结果写入页面
+    function add_G(){
+        a1.innerHTML = SL[0];
+        img1.style.backgroundImage = 'url(' + SLIMG[0] + ')';
+        // img1.style.backgroundImage = 'url("1x/卡池icon/EAdaifuI01001.png")';
+        if (SL.length !== 1){
+            a2.innerHTML = SL[1];
+            a3.innerHTML = SL[2];
+            a4.innerHTML = SL[3];
+            a5.innerHTML = SL[4];
+            a6.innerHTML = SL[5];
+            a7.innerHTML = SL[6];
+            a8.innerHTML = SL[7];
+            a9.innerHTML = SL[8];
+            a10.innerHTML = SL[9];
+            img2.style.backgroundImage = 'url(' + SLIMG[1] + ')';
+            img3.style.backgroundImage = 'url(' + SLIMG[2] + ')';
+            img4.style.backgroundImage = 'url(' + SLIMG[3] + ')';
+            img5.style.backgroundImage = 'url(' + SLIMG[4] + ')';
+            img6.style.backgroundImage = 'url(' + SLIMG[5] + ')';
+            img7.style.backgroundImage = 'url(' + SLIMG[6] + ')';
+            img8.style.backgroundImage = 'url(' + SLIMG[7] + ')';
+            img9.style.backgroundImage = 'url(' + SLIMG[8] + ')';
+            img10.style.backgroundImage = 'url(' + SLIMG[9] + ')';
+        }
+    }
+
+    //清除统计数据
+    function clear_sj() {
+        panel_body_left.innerHTML = "";
+        panel_body_center.innerHTML = "";
+        panel_body_right.innerHTML = "";
+        allSum = 0;
+        chl = [];
+        sumjs = 0;
+        Asumjs = 0;
+        sumwq = 0;
+        Wsumwq = 0;
+        LXWQ = 0;
+        SGZT = 0;
+    }
+
+    //出货记录
+    function onGetMessage(a, b) {
+        panel_body_right.innerHTML += a + "抽 " + b + "<br>";
+        //
+    }
+
+    let panel_body_left = document.getElementById("panel-body-left");
+    let panel_body_center = document.getElementById("panel-body-center");
+    let panel_body_right = document.getElementById("panel-body-right");
+    let ogm = document.getElementById("ogm");
+
+    //统计数据计算
+    function add_sj(a, b) {
+        panel_body_left.innerHTML = allSum;
+        panel_body_center.innerHTML = a === 1? b - sumjs:30 - sumwq;
+    }
+
+    //按照指定概率抽卡，返回结果
+    function gl(prizes, prizeWeight){
+        var goods = 0;
+        var weightSum = prizeWeight.reduce(function(prev, currVal){	//计算权重之和：1+5+20+74=100
+            return prev + currVal;	//prev 是前一次累加后的数值，currVal 是本次待加的数值
+        }, 0);
+        let number = Math.random() * weightSum;
+        let pri = 0;
+        for (let i = 0; i < prizeWeight.length; i++) {
+            pri += prizeWeight[i];
+            if (number <= pri){
+                goods = prizes[i];
+                break;
+            }
+        }
+        return goods;
+    }
+
+    //平均随机值计算
+    function selectFrom(lowerValue, upperValue){
+        var choies = upperValue - lowerValue + 1;
+        return Math.floor(Math.random() * choies + lowerValue);
+    }
+
+    //返回抽出的物品序号（根据传入的物品类别计算）
+    function gl_2(a) {
+        if (a === "S构造体"){
+            let b = Sjs[Sjs.selectedIndex].value;
+            if (b === "0") {
+                return selectFrom(1, Sgzt.length);
+            } else {
+                let p = Math.random() * 100;
+                if (p >= 20){
+                    return b;
+                } else {
+                    let q;
+                    do {
+                        q = selectFrom(1, Sgzt.length)
+                    } while (q === b);
+                    return q
+                }
+            }
+        }
+        if (a === "A构造体"){
+            let b = Ajs[Ajs.selectedIndex].value;
+            if (b === "0") {
+                return selectFrom(1, Agzt.length);
+            } else {
+                let p = Math.random() * 100;
+                if (p >= 20){
+                    return b;
+                } else {
+                    let q;
+                    do {
+                        q = selectFrom(1, Agzt.length)
+                    } while (q === b);
+                    return q
+                }
+            }
+        }
+        if (a === "B构造体"){return selectFrom(1, Bgzt.length);}
+        if (a === "角色碎片"){return selectFrom(1, (Sgzt.length + Agzt.length + Bgzt.length));}
+        if (a === "紫色装备"){return selectFrom(1, zszb.length);}
+        if (a === "经验材料"){return selectFrom(1, jycl.length);}
+        if (a === "六星武器"){
+            let b = lwq[lwq.selectedIndex].value;
+            if (b === "0") {
+                return selectFrom(1, lxwq.length);
+            } else {
+                let p = Math.random() * 100;
+                if (p >= 20){
+                    return b;
+                } else {
+                    let q;
+                    do {
+                        q = selectFrom(1, lxwq.length)
+                    } while (q === b);
+                    return q
+                }
+            }
+        }
+        if (a === "五星武器"){return selectFrom(1, wxwq.length);}
+        if (a === "紫色武器"){return selectFrom(1, zswq.length);}
+        if (a === "蓝色武器"){return selectFrom(1, lswq.length);}
+        if (a === "突破材料"){return selectFrom(1, tpcl.length);}
+        if (a === "螺母箱"){return selectFrom(1, lmx.length);}
+    }
+
+    //切换抽卡池按钮事件
+    let _left = document.getElementById("left");
+    let _right = document.getElementById("right");
+    let juese = document.getElementById("juese");
+    let Ajuese = document.getElementById("Ajuese");
+    let wuqi = document.getElementById("wuqi");
+    let div_js = document.getElementById("div_js");
+    let div_wq = document.getElementById("div_wq");
+    let _top = document.getElementsByClassName("top")[0];
+    function switch_s(a) {
+        clear_G();
+        clear_sj();
+        bd = 60;
+        tt.innerHTML = "命运UP池";
+        qhup.value = 1;
+
+        if (a === "l"){
+            let str = _left.value;
+            if (str === "1"){
+                jzc();
+
+                juese.style.display = "none";
+            }
+            if (str === "2"){
+                upc();
+
+                wuqi.style.display = "none";
+            }
+            if (str === "3"){
+                wqc();
+
+                Ajuese.style.display = "none";
+            }
+        }
+        if (a === "r"){
+            let str = _right.value;
+            if (str === "1"){
+                jzc();
+
+                wuqi.style.display = "none";
+            }
+            if (str === "2"){
+                upc();
+
+                Ajuese.style.display = "none";
+            }
+            if (str === "3"){
+                wqc();
+
+                juese.style.display = "none";
+            }
+        }
+
+        //基准
+        function jzc() {
+            _top.style.backgroundImage = 'url("1x/基准.png")';
+            _left.value = 3; //武器池
+            _right.value = 2; //UP池
+            Ajuese.style.display = "block";
+            qhup.style.display = "none";
+            ogm.style.opacity = 0;
+            div_js.style.display = "block";
+            div_wq.style.display = "none";
+        }
+        //UP
+        function upc() {
+            _top.style.backgroundImage = 'url("1x/UP.png")';
+            _left.value = 1;//基准池
+            _right.value = 3;//武器池
+            juese.style.display = "block";
+            div_js.style.display = "block";
+            div_wq.style.display = "none";
+            qhup.style.display = "block";
+            ogm.style.opacity = 0;
+        }
+        //武器
+        function wqc() {
+            _top.style.backgroundImage = 'url("1x/武器.png")';
+            _left.value = 2;//UP池
+            _right.value = 1;//基准池
+            wuqi.style.display = "block";
+            div_js.style.display = "none";
+            div_wq.style.display = "block";
+            qhup.style.display = "none";
+            ogm.style.opacity = 1;
+        }
+    }
+
+    //切换up池与命运up池
+    let tt = document.getElementById("tt");
+
+    function qh() {
+        let v = qhup.value;
+        v === "1" ? tt.innerHTML = "UP池":tt.innerHTML = "命运UP池";
+        v === "1" ? qhup.value = 2 :qhup.value = 1;
+        bd === 60 ? bd = selectFrom(80, 100) : bd = 60;
+
+        clear_sj();
+        clear_G();
+        console.log(v)
+    }
+</script>
+</html>
